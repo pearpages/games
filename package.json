@@ -8,7 +8,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "live-server ./docs"
+    "start": "live-server ."
   },
   "author": "",
   "license": "ISC"
