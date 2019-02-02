@@ -1,4 +1,4 @@
-const resolution = 10;
+const resolution = 5;
 
 main();
 
@@ -22,7 +22,7 @@ function loop(grid, cb) {
 function draw(x, y, grid, canvas) {
   !!(grid[x][y])
     ? (canvas.fillStyle = "#000", canvas.fillRect(x * resolution, y * resolution, resolution, resolution))
-    : (canvas.fillStyle = "#FFF", canvas.strokeRect(x * resolution, y * resolution, resolution, resolution))
+    : (canvas.fillStyle = "#FFF", canvas.fillRect(x * resolution, y * resolution, resolution, resolution))
 }
 
 function createCanvas({cols, rows}, id = 'canvas') {

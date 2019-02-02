@@ -3,6 +3,9 @@
 <head>
     <title>Game of Life</title>
     <style>
+        canvas {
+            border: 1px solid #000;
+        }
         fieldset{
             display: inline;
         }
@@ -16,8 +19,8 @@
     <h1>Game of Life!</h1>
     <fieldset>
         <legend>Play</legend>
-        <label>Cols: <input name="cols" type="number" value="50"></label>
-        <label>Rows: <input name="rows" type="number" value="50"></label>
+        <label>Cols: <input name="cols" type="number" value="100"></label>
+        <label>Rows: <input name="rows" type="number" value="100"></label>
         <label>speed: <input name="speed" type="number" value="100"></label>
         <button id="pause">Start</button>
         <button id="reload">Reload</button>
