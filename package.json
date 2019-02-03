@@ -8,7 +8,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "live-server ."
+    "life": "live-server ./game-of-life"
   },
   "author": "",
   "license": "ISC"
