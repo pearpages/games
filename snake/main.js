@@ -1,7 +1,7 @@
 const SPEED = 100;
 const CANVAS_OPTIONS = {
-  cols: 50,
-  rows: 50,
+  cols: 25,
+  rows: 25,
   id: 'canvas',
   resolution: 10,
   bgColor: '#3e4444'
@@ -12,7 +12,12 @@ main();
 function main() {
   const snake = new Snake(document.body, CANVAS_OPTIONS);
   const food = new Food(CANVAS_OPTIONS);
-  setInterval(() => {
+  const intervalRef = setInterval(() => {
+    if (snake.death(snake.next())) {
+      alert('You lose!');
+      clearInterval(intervalRef);
+      return;
+    }
     snake.update();
     if (snake.eat(food.x, food.y)) {
       food.move();
@@ -66,21 +71,32 @@ function constrain(value, min, max) {
 }
 
 function Snake(body, {resolution, cols, rows}) {
-  this.x = 0;
-  this.y = 0;
   this.xspeed = 1;
   this.yspeed = 0;
+  this.total = 1;
+  this.tail = [{x:0, y:0}];
 
   body.onkeydown = event => keyPressed(event, this.direction.bind(this));
 
-  this.update = function(maxX = cols, maxY = rows) {
-    this.x = constrain(this.x + this.xspeed, 0, maxX - 1);
-    this.y = constrain(this.y + this.yspeed, 0, maxY - 1);
+  this.next = function(maxX = cols, maxY = rows) {
+    const x = constrain(this.tail[0].x + this.xspeed, 0, maxX - 1);
+    const y = constrain(this.tail[0].y + this.yspeed, 0, maxY - 1);
+    return {x, y};
+  }
+
+  this.update = function() {
+    this.tail = [this.next(), ...this.tail].slice(0, this.total);
   }
 
   this.show = function(context, snakeColor = '#FFF', scale = resolution) {
     context.fillStyle = snakeColor;
-    context.fillRect(this.x * scale, this.y * scale, scale, scale);
+    this.tail.forEach(point =>
+      context.fillRect(point.x * scale, point.y * scale, scale, scale)
+    );
+  }
+
+  this.death = function({x, y}) {
+    return !!this.tail.find(point => point.x == x && point.y == y);
   }
 
   this.direction = function(x, y) {
@@ -89,7 +105,8 @@ function Snake(body, {resolution, cols, rows}) {
   }
 
   this.eat = function(x, y) {
-    if (x == this.x && y == this.y) {
+    if (x == this.tail[0].x && y == this.tail[0].y) {
+      this.total++;
       return true;
     }
     return false;
