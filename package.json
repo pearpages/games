@@ -8,7 +8,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "life": "live-server ./game-of-life"
+    "life": "live-server ./game-of-life",
+    "snake": "live-server ./snake"
   },
   "author": "",
   "license": "ISC"
