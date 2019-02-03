@@ -1,4 +1,4 @@
-const SPEED = 10;
+const SPEED = 100;
 const CANVAS_OPTIONS = {
   cols: 50,
   rows: 50,
@@ -11,10 +11,15 @@ main();
 
 function main() {
   const snake = new Snake(document.body, CANVAS_OPTIONS);
+  const food = new Food(CANVAS_OPTIONS);
   setInterval(() => {
     snake.update();
+    if (snake.eat(food.x, food.y)) {
+      food.move();
+    }
     draw([
-      snake.show.bind(snake)
+      snake.show.bind(snake),
+      food.draw.bind(food)
     ]);
   }, SPEED);
 }
@@ -23,6 +28,20 @@ function draw(cbs) {
   deleteCanvas();
   const context = createCanvas();
   cbs.forEach(cb => cb(context));
+}
+
+function Food({cols, rows, resolution}) {
+  this.draw = function(context, scale = resolution) {
+    context.fillStyle = '#F00';
+    context.fillRect(this.x * scale, this.y * scale, scale, scale);
+  }
+
+  this.move = function() {
+    this.x = Math.floor(Math.random() * cols);
+    this.y = Math.floor(Math.random() * rows);
+  }
+
+  this.move();
 }
 
 function keyPressed({keyCode}, direction ) {
@@ -54,19 +73,26 @@ function Snake(body, {resolution, cols, rows}) {
 
   body.onkeydown = event => keyPressed(event, this.direction.bind(this));
 
-  this.update = function(maxX = cols, maxY = rows, scale = resolution) {
-    this.x = constrain(this.x + this.xspeed, 0, (maxX * scale) - scale);
-    this.y = constrain(this.y + this.yspeed, 0, (maxY * scale) - scale);
+  this.update = function(maxX = cols, maxY = rows) {
+    this.x = constrain(this.x + this.xspeed, 0, maxX - 1);
+    this.y = constrain(this.y + this.yspeed, 0, maxY - 1);
   }
 
   this.show = function(context, snakeColor = '#FFF', scale = resolution) {
     context.fillStyle = snakeColor;
-    context.fillRect(this.x, this.y, scale, scale);
+    context.fillRect(this.x * scale, this.y * scale, scale, scale);
   }
 
   this.direction = function(x, y) {
     this.xspeed = x;
     this.yspeed = y;
+  }
+
+  this.eat = function(x, y) {
+    if (x == this.x && y == this.y) {
+      return true;
+    }
+    return false;
   }
 }
 
