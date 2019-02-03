@@ -3,16 +3,27 @@ const CANVAS_OPTIONS = {
   cols: 25,
   rows: 25,
   id: 'canvas',
-  resolution: 10,
+  resolution: 20,
   bgColor: '#3e4444'
 };
 
 main();
 
 function main() {
+  createCanvas(CANVAS_OPTIONS);
+  let intervalRef;
+  document.getElementById('start').onclick = () => {
+    !!intervalRef ? clearInterval(intervalRef) : 0;
+    intervalRef = start(SPEED);
+  };
+}
+
+function start(speed) {
+  const points = document.getElementById('points');
   const snake = new Snake(document.body, CANVAS_OPTIONS);
   const food = new Food(CANVAS_OPTIONS);
   const intervalRef = setInterval(() => {
+    points.textContent = (snake.tail.length -1) * 10;
     if (snake.death(snake.next())) {
       alert('You lose!');
       clearInterval(intervalRef);
@@ -26,7 +37,8 @@ function main() {
       snake.show.bind(snake),
       food.draw.bind(food)
     ]);
-  }, SPEED);
+  }, speed);
+  return intervalRef;
 }
 
 function draw(cbs) {
