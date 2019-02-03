@@ -37,7 +37,16 @@ function keyPressed({keyCode}, direction ) {
   }
 }
 
-function Snake(body, {resolution}) {
+function constrain(value, min, max) {
+  if (value <= min) {
+    return min;
+  } else if (value >= max) {
+    return max;
+  }
+  return value;
+}
+
+function Snake(body, {resolution, cols, rows}) {
   this.x = 0;
   this.y = 0;
   this.xspeed = 1;
@@ -45,9 +54,9 @@ function Snake(body, {resolution}) {
 
   body.onkeydown = event => keyPressed(event, this.direction.bind(this));
 
-  this.update = function() {
-    this.x = this.x + this.xspeed;
-    this.y = this.y + this.yspeed;
+  this.update = function(maxX = cols, maxY = rows, scale = resolution) {
+    this.x = constrain(this.x + this.xspeed, 0, (maxX * scale) - scale);
+    this.y = constrain(this.y + this.yspeed, 0, (maxY * scale) - scale);
   }
 
   this.show = function(context, snakeColor = '#FFF', scale = resolution) {
