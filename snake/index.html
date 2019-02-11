@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Snake</title>
     <style>
+      * {
+        font-family: Arial, Helvetica;
+      }
       canvas {
         border: 1px solid #000;
       }
@@ -13,8 +16,11 @@
 </head>
 <body>
   <h1>Snake Game</h1>
+  <h4>Instructions</h4>
+  <p>
+    You can use <strong>Enter</strong> to restart the game or <strong>Space</strong> to pause it.
+  </p>
   <div><button id="start">Start over</button> Points: <span id="points">0</span></div>
-  <script async="false" src="sounds.js"></script>
-  <script async="false" src="index.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>
