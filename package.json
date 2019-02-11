@@ -9,7 +9,8 @@
   "devDependencies": {},
   "scripts": {
     "life": "live-server ./game-of-life",
-    "snake": "live-server ./snake"
+    "snake": "live-server ./snake",
+    "bouncing-ball": "live-server ./bouncing-ball"
   },
   "author": "",
   "license": "ISC"
