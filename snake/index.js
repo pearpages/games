@@ -107,6 +107,10 @@ const SNAKE = function () {
     update,
     updateSpeed,
     isMoving,
+    isGoingLeft,
+    isGoingRight,
+    isGoingUp,
+    isGoingDown,
     initialState
   };
 
@@ -131,29 +135,45 @@ const SNAKE = function () {
     return moving.includes(key);
   }
 
-  function updateSpeed(keyCode, snakeState) {
-    if (INPUT.isKeyCode(keyCode, INPUT.keys.UP) &&
+  function isGoingLeft(snake) {
+    return snake.xspeed === -1;
+  }
+
+  function isGoingRight(snake) {
+    return snake.xspeed === 1;
+  }
+
+  function isGoingUp(snake) {
+    return snake.yspeed === -1;
+  }
+
+  function isGoingDown(snake) {
+    return snake.yspeed === 1;
+  }
+
+  function updateSpeed(keyPressed, snakeState) {
+    if ((keyPressed === INPUT.keys.UP) &&
       snakeState.yspeed !== 1) {
       return {
         ...snakeState,
         xspeed: 0,
         yspeed: -1
       };
-    } else if (INPUT.isKeyCode(keyCode, INPUT.keys.DOWN) &&
+    } else if ((keyPressed === INPUT.keys.DOWN) &&
       snakeState.yspeed !== -1) {
       return {
         ...snakeState,
         xspeed: 0,
         yspeed: 1
       };
-    } else if (INPUT.isKeyCode(keyCode, INPUT.keys.LEFT) &&
+    } else if ((keyPressed === INPUT.keys.LEFT) &&
       snakeState.xspeed !== 1) {
       return {
         ...snakeState,
         xspeed: -1,
         yspeed: 0
       };
-    } else if (INPUT.isKeyCode(keyCode, INPUT.keys.RIGHT) &&
+    } else if ((keyPressed === INPUT.keys.RIGHT) &&
       snakeState.xspeed !== -1) {
       return {
         ...snakeState,
@@ -253,6 +273,41 @@ const GAME = {
   },
 
   init: function () {
+    document.body.ontouchstart = event => {
+      const canvas = document.querySelector('canvas');
+      const {offsetHeight, offsetLeft} = canvas;
+      let snakeHead;
+      if (state.snake && state.snake.tail) {
+        snakeHead = {
+          x: (state.snake.tail[0].x * CANVAS_OPTIONS.resolution) + offsetLeft,
+          y: (state.snake.tail[0].y * CANVAS_OPTIONS.resolution) + offsetHeight
+        };
+        const touch = {x: event.touches[0].pageX, y: event.touches[0].pageY};
+        const swhitchHorizontally = (touch, snakeHead) => {
+          if (touch.x < snakeHead.x ) {
+            state.snake = { ...SNAKE.updateSpeed(INPUT.keys.LEFT, state.snake) };
+          } else {
+            state.snake = { ...SNAKE.updateSpeed(INPUT.keys.RIGHT, state.snake) };
+          }
+        };
+        const switchVertically = (touch, snakeHead) => {
+          if (touch.y < snakeHead.y ) {
+            state.snake = { ...SNAKE.updateSpeed(INPUT.keys.UP, state.snake) };
+          } else {
+            state.snake = { ...SNAKE.updateSpeed(INPUT.keys.DOWN, state.snake) };
+          }
+        };
+        if (SNAKE.isGoingUp(state.snake)) {
+          swhitchHorizontally(touch, snakeHead);
+        } else if (SNAKE.isGoingDown(state.snake)) {
+          swhitchHorizontally(touch, snakeHead);
+        } else if (SNAKE.isGoingLeft(state.snake)) {
+          switchVertically(touch, snakeHead);
+        } else if (SNAKE.isGoingRight(state.snake)) {
+          switchVertically(touch, snakeHead);
+        }
+      }
+    };
     document.body.onkeydown = event => {
       const keyPressed = INPUT.keyPressed(event.keyCode);
       if (GAME.isStarting(keyPressed)) {
@@ -262,7 +317,7 @@ const GAME = {
           ? (GAME.start(state), state.isPaused = false)
           : (GAME.endGame(), state.isPaused = true);
       } else if (GAME.hasStarted() && !GAME.isPaused() && SNAKE.isMoving(keyPressed)) {
-        state.snake = { ...SNAKE.updateSpeed(event.keyCode, state.snake) };
+        state.snake = { ...SNAKE.updateSpeed(INPUT.keyPressed(event.keyCode), state.snake) };
       }
     };
   },
