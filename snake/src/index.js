@@ -3,15 +3,8 @@ import { FOOD } from './food';
 import { INPUT } from './input';
 import { SNAKE } from './snake';
 import { SOUND } from './sound';
+import CANVAS_OPTIONS from './config.json';
 
-const CANVAS_OPTIONS = {
-  cols: 12,
-  rows: 12,
-  id: 'canvas',
-  resolution: 20,
-  bgColor: '#3e4444',
-  speed: 100
-};
 let state = {};
 
 const START_BUTTON = {
@@ -120,9 +113,7 @@ const GAME = {
     if (SNAKE.death(canvasOptions, state.snake)) {
       SOUND.chord();
       GAME.endGame();
-      CANVAS.draw(
-        elementsToDraw,
-        { ...CANVAS_OPTIONS, bgColor: 'red' });
+      CANVAS.draw([CANVAS.background('red'), ...elementsToDraw.slice(1)]);
       state = { ...GAME.getInitialState() };
       return;
     }
@@ -132,11 +123,12 @@ const GAME = {
       state.food = FOOD.move(canvasOptions, state.snake.tail);
     }
     state.snake = { ...SNAKE.update(canvasOptions, state.snake) };
-    CANVAS.draw(elementsToDraw, CANVAS_OPTIONS);
+    CANVAS.draw(elementsToDraw);
   }, canvasOptions.speed),
 
   runGame: function (canvasOptions) {
     const elementsToDraw = [
+      CANVAS.background(CANVAS_OPTIONS.bgColor),
       (context) => SNAKE.draw(context, canvasOptions.resolution, state.snake.tail),
       (context) => FOOD.draw(canvasOptions.resolution, state.food, context)
     ];
@@ -146,7 +138,8 @@ const GAME = {
 }
 
 function main() {
-  CANVAS.createCanvas(CANVAS_OPTIONS);
+  CANVAS.createCanvas();
+  CANVAS.draw([CANVAS.background(CANVAS_OPTIONS.bgColor)]);
   GAME.init();
   START_BUTTON.get().onclick = () => GAME.start();
 }

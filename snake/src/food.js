@@ -1,4 +1,10 @@
+import CANVAS_OPTIONS from './config.json';
+
 export const FOOD = {
+    initialState: function (snakeTail) {
+        this.move(CANVAS_OPTIONS, snakeTail)
+    },
+
     draw: function (scale, { x, y }, context) {
         context.fillStyle = '#F00';
         context.fillRect(x * scale, y * scale, scale, scale);

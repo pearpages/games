@@ -1,0 +1,8 @@
+{
+    "cols": 12,
+    "rows": 12,
+    "id": "canvas",
+    "resolution": 20,
+    "bgColor": "#3e4444",
+    "speed": 100
+}
