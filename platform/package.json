@@ -1,0 +1,23 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "parcel build ./src/index.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "http-server .",
+    "dev": "parcel ./src/index.mjs & live-server .",
+    "start": "npm run build && npm run serve"
+  },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^0.12.1",
+    "parcel-bundler": "^1.12.4"
+  }
+}
